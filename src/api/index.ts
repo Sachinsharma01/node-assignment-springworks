@@ -1,4 +1,4 @@
-import { NextFunction, Router, Request, Response } from "express";
+import { Router} from "express";
 import notes from "./routes/notes";
 import express from 'express';
 
