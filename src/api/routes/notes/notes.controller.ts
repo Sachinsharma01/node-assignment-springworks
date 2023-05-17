@@ -8,7 +8,6 @@ const notes = JSON.parse(fs.readFileSync(filePath));
 
 const getAllNotes = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Get All Notes API starts here");
     return APIResponses.success(res, "All notes fetched", notes);
   } catch (err) {
     console.log("Error ocurred in get all notes API", err);
@@ -18,6 +17,10 @@ const getAllNotes = async (req: Request, res: Response, next: NextFunction) => {
 
 const addNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    let body: any = req.body;
+    if (!body.hasOwnProperty("note")) {
+      return APIResponses.badRequest(res, "Body can not be empty", {});
+    }
     let noteId = notes.length != 0 ? notes[notes.length - 1]?.noteId + 1 : 0;
     let newNote = Object.assign({ noteId }, req.body);
     notes.push(newNote);
@@ -33,6 +36,10 @@ const addNote = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    if (!req.params.hasOwnProperty("id")) {
+      return APIResponses.badRequest(res, "Please provide notId", {});
+    }
+
     let noteId = +req.params.id;
     let lastNodeId = notes[notes.length - 1].noteId;
     if (noteId > lastNodeId || noteId < 0) {
@@ -54,6 +61,15 @@ const deleteNote = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    let body: any = req.body;
+    if (!body.hasOwnProperty("note")) {
+      return APIResponses.badRequest(res, "Body can not be empty", {});
+    }
+
+    if (!req.params.hasOwnProperty("id")) {
+      return APIResponses.badRequest(res, "Please provide notId", {});
+    }
+
     let noteId = +req.params.id;
     let lastNodeId = notes[notes.length - 1].noteId;
     if (noteId > lastNodeId || noteId < 0) {

@@ -3,6 +3,8 @@ import cors from "cors";
 import apiRoutes from './api'
 import config from "./config";
 
+let server: any = null;
+
 const startServer = () => {
   const PORT = config.port;
 
@@ -21,7 +23,7 @@ const startServer = () => {
     })
   })
 
-  app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(
       `################################################
       🛡️  Server listening on port: ${PORT} 🛡️
@@ -31,3 +33,5 @@ const startServer = () => {
 };
 
 startServer();
+
+export default server;
